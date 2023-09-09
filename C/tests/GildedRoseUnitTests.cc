@@ -1,20 +1,10 @@
-#include <CppUTest/TestHarness.h>
-#include <CppUTest/CommandLineTestRunner.h>
-#include <CppUTestExt/MockSupport.h>
+#include <catch2/catch_test_macros.hpp>
 
 extern "C" {
-#include "GildedRose.h"
+#include "../GildedRose.h"
 }
 
-TEST_GROUP(TestGildedRoseGroup)
-{
-  void setup() {
-  }
-  void teardown() {
-  }
-};
-
-TEST(TestGildedRoseGroup, FirstTest)
+TEST_CASE("TestGildedRoseGroup", "FirstTest")
 {
     Item items[1];
     init_item(items, "Foo", 0, 0);
@@ -36,8 +26,3 @@ void example()
     update_quality(items, last);
 }
 
-int
-main(int ac, char** av)
-{
-  return CommandLineTestRunner::RunAllTests(ac, av);
-}
