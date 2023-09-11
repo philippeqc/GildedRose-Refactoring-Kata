@@ -40,39 +40,60 @@ item_type getItemType(Item *pItem) {
   return ITEM_COMMON;
 }
 
+Item *lower_quality(Item *pItem) {
+  if (pItem->sellIn == 0) {
+    pItem->quality = pItem->quality - 2;
+  } else {
+    pItem->quality = pItem->quality - 1;
+  }
+  return pItem;
+}
+
+Item *raise_quality(Item *pItem) {
+  if (pItem->sellIn < 0) {
+    pItem->quality = pItem->quality + 2;
+  } else {
+    pItem->quality = pItem->quality + 1;
+  }
+  return pItem;
+}
+
+Item *raise_quality_backstage(Item *pItem) {
+  if (pItem->sellIn == 0) {
+    pItem->quality = 0;
+  } else if (pItem->sellIn < 6) {
+    pItem->quality = pItem->quality + 3;
+  } else if (pItem->sellIn < 11) {
+    pItem->quality = pItem->quality + 2;
+  } else {
+    pItem->quality = pItem->quality + 1;
+  }
+  return pItem;
+}
+
+Item *clamp_quality(Item *pItem) {
+  if (pItem->quality > 50) {
+    pItem->quality = 50;
+  }
+  if (pItem->quality < 0) {
+    pItem->quality = 0;
+  }
+  return pItem;
+}
+
 void update_item_quality(Item *pItem) {
   switch (getItemType(pItem)) {
   case ITEM_COMMON:
   case ITEM_CONJURED: {
-    if (pItem->quality > 0) {
-      if (pItem->sellIn == 0) {
-        pItem->quality = pItem->quality - 2;
-      } else {
-        pItem->quality = pItem->quality - 1;
-      }
-    }
+    clamp_quality(lower_quality(pItem));
     break;
   }
   case ITEM_AGED_BRIE: {
-    if (pItem->sellIn < 0) {
-      pItem->quality = pItem->quality + 2;
-    } else {
-      pItem->quality = pItem->quality + 1;
-    }
+    clamp_quality(raise_quality(pItem));
     break;
   }
   case ITEM_BACKSTAGE_PASSES: {
-    if (pItem->quality < 50) {
-      if (pItem->sellIn == 0) {
-        pItem->quality = 0;
-      } else if (pItem->sellIn < 6) {
-        pItem->quality = pItem->quality + 3;
-      } else if (pItem->sellIn < 11) {
-        pItem->quality = pItem->quality + 2;
-      } else {
-        pItem->quality = pItem->quality + 1;
-      }
-    }
+    clamp_quality(raise_quality_backstage(pItem));
     break;
   }
   case ITEM_SULFURAS: {
@@ -82,13 +103,6 @@ void update_item_quality(Item *pItem) {
   }
 
   pItem->sellIn = pItem->sellIn - 1;
-
-  if (pItem->quality > 50) {
-    pItem->quality = 50;
-  }
-  if (pItem->quality < 0) {
-    pItem->quality = 0;
-  }
 }
 
 void update_quality(Item items[], int size) {
