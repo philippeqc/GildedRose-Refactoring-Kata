@@ -14,9 +14,13 @@ extern char *print_item(char *buffer, Item *item) {
   sprintf(buffer, "%s, %d, %d", item->name, item->sellIn, item->quality);
 }
 
+int is_item_quality_decrease_with_time(Item *pItem) {
+  return strcmp(pItem->name, "Aged Brie") &&
+         strcmp(pItem->name, "Backstage passes to a TAFKAL80ETC concert");
+}
+
 void update_item_quality(Item *pItem) {
-  if (strcmp(pItem->name, "Aged Brie") &&
-      strcmp(pItem->name, "Backstage passes to a TAFKAL80ETC concert")) {
+  if (is_item_quality_decrease_with_time(pItem)) {
     if (pItem->quality > 0) {
       if (strcmp(pItem->name, "Sulfuras, Hand of Ragnaros")) {
         pItem->quality = pItem->quality - 1;
