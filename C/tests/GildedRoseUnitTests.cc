@@ -1,15 +1,21 @@
+#include "ApprovalTests.hpp"
 #include <catch2/catch_test_macros.hpp>
+
+using namespace ApprovalTests;
 
 extern "C" {
 #include "../GildedRose.h"
 }
 
-TEST_CASE("TestGildedRoseGroup", "FirstTest")
-{
-    Item items[1];
-    init_item(items, "Foo", 0, 0);
-    update_quality(items, 1);
-    STRCMP_EQUAL("fixme", items[0].name);
+TEST_CASE("AFirstTest") {
+  Item items[1];
+  init_item(items, "Foo", 0, 0);
+  update_quality(items, 1);
+
+  Approvals::verify(items[0], [](const Item &b, std::ostream &os) {
+    os << "name: " << b.name << ", sellIn: " << b.sellIn
+       << ", quality: " << b.quality;
+  });
 }
 
 void example()
