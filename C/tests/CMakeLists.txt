@@ -3,6 +3,7 @@ set(CMAKE_CXX_STANDARD 14)
 find_package(Catch2 REQUIRED)
 set(SOURCE_FILES
         GildedRoseUnitTests.cc
+        Common.cpp
         main.cpp
 )
 add_executable(${TEST_NAME} ${SOURCE_FILES})

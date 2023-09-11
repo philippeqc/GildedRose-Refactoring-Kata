@@ -1,0 +1,1 @@
+name: +5 Dexterity Vest, sellIn: -1, quality: 8
