@@ -14,58 +14,80 @@ extern char *print_item(char *buffer, Item *item) {
   sprintf(buffer, "%s, %d, %d", item->name, item->sellIn, item->quality);
 }
 
-int is_item_quality_decrease_with_time(Item *pItem) {
-  return strcmp(pItem->name, "Aged Brie") &&
-         strcmp(pItem->name, "Backstage passes to a TAFKAL80ETC concert");
+typedef enum {
+  ITEM_COMMON,
+  ITEM_AGED_BRIE,
+
+  ITEM_SULFURAS,
+  ITEM_BACKSTAGE_PASSES,
+  ITEM_CONJURED
+} item_type;
+
+item_type getItemType(Item *pItem) {
+  if (strcmp(pItem->name, "Aged Brie") == 0) {
+    return ITEM_AGED_BRIE;
+  }
+  if (strcmp(pItem->name, "Backstage passes to a TAFKAL80ETC concert") == 0) {
+    return ITEM_BACKSTAGE_PASSES;
+  }
+  if (strcmp(pItem->name, "Sulfuras, Hand of Ragnaros") == 0) {
+    return ITEM_SULFURAS;
+  }
+  if (strcmp(pItem->name, "Conjured") == 0) {
+    return ITEM_CONJURED;
+  }
+
+  return ITEM_COMMON;
 }
 
 void update_item_quality(Item *pItem) {
-  if (is_item_quality_decrease_with_time(pItem)) {
+  switch (getItemType(pItem)) {
+  case ITEM_COMMON:
+  case ITEM_CONJURED: {
     if (pItem->quality > 0) {
-      if (strcmp(pItem->name, "Sulfuras, Hand of Ragnaros")) {
+      if (pItem->sellIn == 0) {
+        pItem->quality = pItem->quality - 2;
+      } else {
         pItem->quality = pItem->quality - 1;
       }
     }
-  } else {
-    if (pItem->quality < 50) {
-      pItem->quality = pItem->quality + 1;
-
-      if (!strcmp(pItem->name, "Backstage passes to a TAFKAL80ETC concert")) {
-        if (pItem->sellIn < 11) {
-          if (pItem->quality < 50) {
-            pItem->quality = pItem->quality + 1;
-          }
-        }
-
-        if (pItem->sellIn < 6) {
-          if (pItem->quality < 50) {
-            pItem->quality = pItem->quality + 1;
-          }
-        }
-      }
-    }
+    break;
   }
-
-  if (strcmp(pItem->name, "Sulfuras, Hand of Ragnaros")) {
-    pItem->sellIn = pItem->sellIn - 1;
-  }
-
-  if (pItem->sellIn < 0) {
-    if (strcmp(pItem->name, "Aged Brie")) {
-      if (strcmp(pItem->name, "Backstage passes to a TAFKAL80ETC concert")) {
-        if (pItem->quality > 0) {
-          if (strcmp(pItem->name, "Sulfuras, Hand of Ragnaros")) {
-            pItem->quality = pItem->quality - 1;
-          }
-        }
-      } else {
-        pItem->quality = pItem->quality - pItem->quality;
-      }
+  case ITEM_AGED_BRIE: {
+    if (pItem->sellIn < 0) {
+      pItem->quality = pItem->quality + 2;
     } else {
-      if (pItem->quality < 50) {
+      pItem->quality = pItem->quality + 1;
+    }
+    break;
+  }
+  case ITEM_BACKSTAGE_PASSES: {
+    if (pItem->quality < 50) {
+      if (pItem->sellIn == 0) {
+        pItem->quality = 0;
+      } else if (pItem->sellIn < 6) {
+        pItem->quality = pItem->quality + 3;
+      } else if (pItem->sellIn < 11) {
+        pItem->quality = pItem->quality + 2;
+      } else {
         pItem->quality = pItem->quality + 1;
       }
     }
+    break;
+  }
+  case ITEM_SULFURAS: {
+    return;
+    break;
+  }
+  }
+
+  pItem->sellIn = pItem->sellIn - 1;
+
+  if (pItem->quality > 50) {
+    pItem->quality = 50;
+  }
+  if (pItem->quality < 0) {
+    pItem->quality = 0;
   }
 }
 

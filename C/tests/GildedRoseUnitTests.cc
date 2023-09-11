@@ -104,11 +104,10 @@ TEST_CASE("BaseRules", "DomainRules") {
 
       SECTION("The quality can degrade to 0") {
         // arrange
-        Item vest = getItem(items, last, "+5 Dexterity Vest");
+        Item *pVest = findItem(items, last, "+5 Dexterity Vest");
 
         // act
-        int daysLeft = (vest.quality + 1) / 2;
-        for (int i = daysLeft; i > 0; i--) {
+        while (pVest->quality > 0) {
           update_quality(items, last);
         }
 
@@ -150,17 +149,14 @@ TEST_CASE("Aged Brie", "DomainRules") {
 
   SECTION("The Quality of an item is never more than 50") {
     // arrange
-    Item brie = getItem(items, last, "Aged Brie");
+    Item *pBrie = findItem(items, last, "Aged Brie");
 
     // Pre-condition: Quality reaches 50
-    update_until_sellIn_for_item(items, last, brie);
-    int daysLeft = (50 - brie.quality) / 2;
-    for (int i = daysLeft; i > 0; i--) {
+    while (pBrie->quality < 50) {
       update_quality(items, last);
     }
 
-    Item preCondition = getItem(items, last, "Aged Brie");
-    REQUIRE(preCondition.quality == 50);
+    REQUIRE(pBrie->quality == 50);
 
     // act
     update_quality(items, last);
