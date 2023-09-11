@@ -23,6 +23,8 @@ typedef enum {
   ITEM_CONJURED
 } item_type;
 
+typedef Item *(*ItemHandler)(Item *pItem);
+
 item_type getItemType(Item *pItem) {
   if (strcmp(pItem->name, "Aged Brie") == 0) {
     return ITEM_AGED_BRIE;
@@ -81,31 +83,45 @@ Item *clamp_quality(Item *pItem) {
   return pItem;
 }
 
+Item *stable_quality(Item *pItem) { return pItem; }
+
+Item *lower_sellIn(Item *pItem) {
+  pItem->sellIn = pItem->sellIn - 1;
+  return pItem;
+}
+
+Item *stable_sellIn(Item *pItem) { return pItem; }
+
 void update_item_quality(Item *pItem) {
+  ItemHandler pQualityHandler = clamp_quality;
+  ItemHandler pSellInHandler = lower_sellIn;
+
   switch (getItemType(pItem)) {
   case ITEM_COMMON: {
-    clamp_quality(lower_quality(pItem, 1));
+    lower_quality(pItem, 1);
     break;
   }
   case ITEM_CONJURED: {
-    clamp_quality(lower_quality(pItem, 2));
+    lower_quality(pItem, 2);
     break;
   }
   case ITEM_AGED_BRIE: {
-    clamp_quality(raise_quality(pItem));
+    raise_quality(pItem);
     break;
   }
   case ITEM_BACKSTAGE_PASSES: {
-    clamp_quality(raise_quality_backstage(pItem));
+    raise_quality_backstage(pItem);
     break;
   }
   case ITEM_SULFURAS: {
-    return;
+    pQualityHandler = stable_quality;
+    pSellInHandler = stable_sellIn;
     break;
   }
   }
 
-  pItem->sellIn = pItem->sellIn - 1;
+  pQualityHandler(pItem);
+  pSellInHandler(pItem);
 }
 
 void update_quality(Item items[], int size) {
