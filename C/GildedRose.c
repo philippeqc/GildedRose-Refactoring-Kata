@@ -96,28 +96,18 @@ void update_item_quality(Item *pItem) {
   ItemHandler pQualityHandler = clamp_quality;
   ItemHandler pSellInHandler = lower_sellIn;
 
-  switch (getItemType(pItem)) {
-  case ITEM_COMMON: {
+  item_type type = getItemType(pItem);
+  if (type == ITEM_COMMON) {
     lower_quality(pItem, 1);
-    break;
-  }
-  case ITEM_CONJURED: {
+  } else if (type == ITEM_CONJURED) {
     lower_quality(pItem, 2);
-    break;
-  }
-  case ITEM_AGED_BRIE: {
+  } else if (type == ITEM_AGED_BRIE) {
     raise_quality(pItem);
-    break;
-  }
-  case ITEM_BACKSTAGE_PASSES: {
+  } else if (type == ITEM_BACKSTAGE_PASSES) {
     raise_quality_backstage(pItem);
-    break;
-  }
-  case ITEM_SULFURAS: {
+  } else if (type == ITEM_SULFURAS) {
     pQualityHandler = stable_quality;
     pSellInHandler = stable_sellIn;
-    break;
-  }
   }
 
   pQualityHandler(pItem);
