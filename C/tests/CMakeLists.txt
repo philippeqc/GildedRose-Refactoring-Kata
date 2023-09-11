@@ -5,6 +5,8 @@ set(SOURCE_FILES
         GildedRoseUnitTests.cc
         Common.cpp
         main.cpp
+        # fib.cpp
+        # Fixture.cpp
 )
 add_executable(${TEST_NAME} ${SOURCE_FILES})
 target_link_libraries(${TEST_NAME} GildedRose ApprovalTestsAmalgamated::ApprovalTestsAmalgamated Catch2::Catch2WithMain)
