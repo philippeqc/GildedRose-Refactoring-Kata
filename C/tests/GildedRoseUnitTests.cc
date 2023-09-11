@@ -321,3 +321,19 @@ TEST_CASE("ImproveWithAge", "DomainRules") {
   }
 }
 */
+
+TEST_CASE("Conjured") {
+  // Arrange
+  Item items[1];
+  int last = 0;
+
+  init_item(items + last++, "Conjured", 10, 20);
+  Item conjured = getItem(items, last, "Conjured");
+
+  // Act
+  update_quality(items, last);
+
+  // Assert
+  Item actual = getItem(items, last, "Conjured");
+  REQUIRE(actual.quality == conjured.quality - 2);
+}

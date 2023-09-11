@@ -40,11 +40,11 @@ item_type getItemType(Item *pItem) {
   return ITEM_COMMON;
 }
 
-Item *lower_quality(Item *pItem) {
+Item *lower_quality(Item *pItem, int rate) {
   if (pItem->sellIn == 0) {
-    pItem->quality = pItem->quality - 2;
+    pItem->quality = pItem->quality - (2 * rate);
   } else {
-    pItem->quality = pItem->quality - 1;
+    pItem->quality = pItem->quality - (1 * rate);
   }
   return pItem;
 }
@@ -83,9 +83,12 @@ Item *clamp_quality(Item *pItem) {
 
 void update_item_quality(Item *pItem) {
   switch (getItemType(pItem)) {
-  case ITEM_COMMON:
+  case ITEM_COMMON: {
+    clamp_quality(lower_quality(pItem, 1));
+    break;
+  }
   case ITEM_CONJURED: {
-    clamp_quality(lower_quality(pItem));
+    clamp_quality(lower_quality(pItem, 2));
     break;
   }
   case ITEM_AGED_BRIE: {
