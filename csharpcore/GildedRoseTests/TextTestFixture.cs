@@ -38,7 +38,8 @@ public static class TextTestFixture
             new Item {Name = "Conjured Mana Cake", SellIn = 3, Quality = 6}
         };
 
-        var app = new GildedRose(items);
+        RuleCreator ruleCreator = new RuleCreator();
+        var app = new GildedRose(items, ruleCreator.rules, ruleCreator.DefaultRule);
 
         int days = 31;
         if (args.Length > 0)

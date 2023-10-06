@@ -1,17 +1,229 @@
 ﻿using Xunit;
 using System.Collections.Generic;
 using GildedRoseKata;
+using System;
 
 namespace GildedRoseTests;
 
 public class GildedRoseTest
 {
-    [Fact]
-    public void Foo()
+    private RuleCreator ruleCreator = new RuleCreator();
+
+    IList<Item> GetSampleItem(string name = "Some Object", int sellIn = 10, int quality = 20)
     {
-        IList<Item> items = new List<Item> { new Item { Name = "foo", SellIn = 0, Quality = 0 } };
-        GildedRose app = new GildedRose(items);
-        app.UpdateQuality();
-        Assert.Equal("fixme", items[0].Name);
+        IList<Item> items = new List<Item> { new() { Name = name, SellIn = sellIn, Quality = quality } };
+        return items;
     }
+
+    int GetFirstItemQuality(IList<Item> items)
+    {
+        return items[0].Quality;
+    }
+
+    int GetFirstItemSellIn(IList<Item> items)
+    {
+        return items[0].SellIn;
+    }
+
+    [Fact]
+    public void SellInDegradeAtTheEndOfEachDay()
+    {
+        // Arrange
+        IList<Item> items = GetSampleItem();
+        var expectedSellIn = GetFirstItemSellIn(items) - 1;
+
+        // Act
+        GildedRose app = new(items, ruleCreator.rules, ruleCreator.DefaultRule);
+        app.UpdateQuality();
+
+        // Assert
+        Assert.Equal(expectedSellIn, items[0].SellIn);
+    }
+
+    [Fact]
+    public void QualityDegradeAtTheEndOfEachDay()
+    {
+        // Arrange
+        IList<Item> items = GetSampleItem();
+        var expectedQuality = GetFirstItemQuality(items) - 1;
+
+        // Act
+        GildedRose app = new(items, ruleCreator.rules, ruleCreator.DefaultRule);
+        app.UpdateQuality();
+
+        // Assert
+        Assert.Equal(expectedQuality, items[0].Quality);
+    }
+
+    [Fact]
+    public void QualityDegradeTwiceAsFastAfterSellInDate()
+    {
+        // Arrange
+        IList<Item> items = GetSampleItem(sellIn: 0);
+        var expectedQuality = GetFirstItemQuality(items) - 2;
+
+        // Act
+        GildedRose app = new(items, ruleCreator.rules, ruleCreator.DefaultRule);
+        app.UpdateQuality();
+
+        // Assert
+        Assert.Equal(expectedQuality, items[0].Quality);
+    }
+
+    [Fact]
+    public void QualityIsNeverNegative()
+    {
+        // Arrange
+        var quality = 1;
+        var expectedQuality = Math.Max(quality - 2, 0);
+        IList<Item> items = GetSampleItem(sellIn: 0, quality: quality);
+
+        // Act
+        GildedRose app = new(items, ruleCreator.rules, ruleCreator.DefaultRule);
+        app.UpdateQuality();
+
+        // Assert
+        Assert.Equal(expectedQuality, items[0].Quality);
+    }
+
+    [Fact]
+    public void AgedBrieQualityIncreasesWithTime()
+    {
+        // Arrange
+        IList<Item> items = GetSampleItem(name: "Aged Brie");
+        var expectedQuality = GetFirstItemQuality(items) + 1;
+
+        // Act
+        GildedRose app = new(items, ruleCreator.rules, ruleCreator.DefaultRule);
+        app.UpdateQuality();
+
+        // Assert
+        Assert.Equal(expectedQuality, items[0].Quality);
+    }
+
+    [Fact]
+    public void TheQualityNeverRaisesOver50()
+    {
+        // Arrange
+        var quality = 50;
+        var expectedQuality = quality;
+        IList<Item> items = GetSampleItem(name: "Aged Brie", quality: quality);
+
+        // Act
+        GildedRose app = new(items, ruleCreator.rules, ruleCreator.DefaultRule);
+        app.UpdateQuality();
+
+        // Assert
+        Assert.Equal(expectedQuality, items[0].Quality);
+    }
+
+    [Fact]
+    public void SulfurasDontHaveToBeSold()
+    {
+        // Arrange
+        IList<Item> items = GetSampleItem(name: "Sulfuras, Hand of Ragnaros");
+        var expectedSellIn = GetFirstItemSellIn(items);
+
+        // Act
+        GildedRose app = new(items, ruleCreator.rules, ruleCreator.DefaultRule);
+        app.UpdateQuality();
+
+        // Assert
+        Assert.Equal(expectedSellIn, items[0].SellIn);
+    }
+
+    [Fact]
+    public void SulfurasNeverChangeQuality()
+    {
+        // Arrange
+        var quality = 80;
+        var expectedQuality = quality;
+        IList<Item> items = GetSampleItem(name: "Sulfuras, Hand of Ragnaros", quality: quality);
+
+        // Act
+        GildedRose app = new(items, ruleCreator.rules, ruleCreator.DefaultRule);
+        app.UpdateQuality();
+
+        // Assert
+        Assert.Equal(expectedQuality, items[0].Quality);
+    }
+
+    [Fact]
+    public void BackstagePassesIncreaseInQualityWithTime()
+    {
+        // Arrange
+        var moreThan10Days = 20;
+        IList<Item> items = GetSampleItem(name: "Backstage passes to a TAFKAL80ETC concert", sellIn: moreThan10Days);
+        var expectedQuality = GetFirstItemQuality(items) + 1;
+
+        // Act
+        GildedRose app = new(items, ruleCreator.rules, ruleCreator.DefaultRule);
+        app.UpdateQuality();
+
+        // Assert
+        Assert.Equal(expectedQuality, items[0].Quality);
+    }
+
+    [Fact]
+    public void BackstagePassesIncreaseInQualityBy2WhenWithin10DaysOfConcert()
+    {
+        // Arrange
+        var within10Days = 10;
+        IList<Item> items = GetSampleItem(name: "Backstage passes to a TAFKAL80ETC concert", sellIn: within10Days);
+        var expectedQuality = GetFirstItemQuality(items) + 2;
+
+        // Act
+        GildedRose app = new(items, ruleCreator.rules, ruleCreator.DefaultRule);
+        app.UpdateQuality();
+
+        // Assert
+        Assert.Equal(expectedQuality, items[0].Quality);
+    }
+
+    [Fact]
+    public void BackstagePassesIncreaseInQualityBy3WhenWithin5DaysOfConcert()
+    {
+        // Arrange
+        var within5Days = 5;
+        IList<Item> items = GetSampleItem(name: "Backstage passes to a TAFKAL80ETC concert", sellIn: within5Days);
+        var expectedQuality = GetFirstItemQuality(items) + 3;
+
+        // Act
+        GildedRose app = new(items, ruleCreator.rules, ruleCreator.DefaultRule);
+        app.UpdateQuality();
+
+        // Assert
+        Assert.Equal(expectedQuality, items[0].Quality);
+    }
+
+    [Fact]
+    public void BackstagePassesLooseAllQualityAfterConcert()
+    {
+        // Arrange
+        var expectedQuality = 0;
+        var sellInAfterConcert = 0;
+        IList<Item> items = GetSampleItem(name: "Backstage passes to a TAFKAL80ETC concert", sellIn: sellInAfterConcert);
+
+        // Act
+        GildedRose app = new(items, ruleCreator.rules, ruleCreator.DefaultRule);
+        app.UpdateQuality();
+
+        // Assert
+        Assert.Equal(expectedQuality, items[0].Quality);
+    }
+
+    // [Fact]
+    // public void ConjuredItemQualityDegradeTwiceAsFast()
+    // {
+    //     // Arrange
+    //     IList<Item> items = GetSampleItem(name: "Conjured Mana Cake");
+    //     var expectedQuality = GetFirstItemQuality(items) - 2;
+
+    //     // Act
+    //     GildedRose2 app = new(items, aFizz.rules, aFizz.DefaultRule);
+    //     app.UpdateQuality();
+
+    //     // Assert
+    //     Assert.Equal(expectedQuality, items[0].Quality);
+    // }
 }
