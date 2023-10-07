@@ -7,7 +7,7 @@ namespace GildedRoseTests;
 
 public class GildedRoseTest
 {
-    private RuleCreator ruleCreator = new RuleCreator();
+    private GildedRoseRule ruleCreator = new GildedRoseRule();
 
     IList<Item> GetSampleItem(string name = "Some Object", int sellIn = 10, int quality = 20)
     {
@@ -212,18 +212,18 @@ public class GildedRoseTest
         Assert.Equal(expectedQuality, items[0].Quality);
     }
 
-    // [Fact]
-    // public void ConjuredItemQualityDegradeTwiceAsFast()
-    // {
-    //     // Arrange
-    //     IList<Item> items = GetSampleItem(name: "Conjured Mana Cake");
-    //     var expectedQuality = GetFirstItemQuality(items) - 2;
+    [Fact(Skip = "Conjured items not yet implemented")]
+    public void ConjuredItemQualityDegradeTwiceAsFast()
+    {
+        // Arrange
+        IList<Item> items = GetSampleItem(name: "Conjured Mana Cake");
+        var expectedQuality = GetFirstItemQuality(items) - 2;
 
-    //     // Act
-    //     GildedRose2 app = new(items, aFizz.rules, aFizz.DefaultRule);
-    //     app.UpdateQuality();
+        // Act
+        GildedRose app = new(items, ruleCreator.rules, ruleCreator.DefaultRule);
+        app.UpdateQuality();
 
-    //     // Assert
-    //     Assert.Equal(expectedQuality, items[0].Quality);
-    // }
+        // Assert
+        Assert.Equal(expectedQuality, items[0].Quality);
+    }
 }
