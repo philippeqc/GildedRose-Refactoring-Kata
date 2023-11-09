@@ -1,9 +1,10 @@
 ﻿using NUnit.Framework;
+using NUnit.Framework;
 using System.Collections.Generic;
 using GildedRoseKata;
 
-namespace GildedRoseTests;
-
+namespace GildedRoseTests
+{
 public class GildedRoseTest
 {
     [SetUp]
@@ -20,4 +21,5 @@ public class GildedRoseTest
         app.UpdateQuality();
         Assert.That("fixme", Is.EqualTo(items[0].Name));
     }
+}
 }

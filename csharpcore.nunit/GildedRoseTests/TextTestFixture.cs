@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using GildedRoseKata;
 
-namespace GildedRoseTests;
+namespace GildedRoseTests
+{
 
 public static class TextTestFixture
 {
@@ -58,4 +59,5 @@ public static class TextTestFixture
             app.UpdateQuality();
         }
     }
+}
 }

@@ -5,8 +5,8 @@ using ApprovalTests;
 using ApprovalTests.Reporters;
 using NUnit.Framework;
 
-namespace GildedRoseTests;
-
+namespace GildedRoseTests
+{
 [UseReporter(typeof(DiffReporter))]
 [TestFixture]
 public class ApprovalTest
@@ -23,4 +23,5 @@ public class ApprovalTest
 
         Approvals.Verify(output);
     }
+}
 }
