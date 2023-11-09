@@ -80,6 +80,20 @@ public class GildedRoseTest
         // Arrange
         var quality = 10;
         var expectedQuality = quality + 1;
+        (GildedRose app, Item item) = Helper.GetAppWithSampleItem(name: "Aged Brie", quality: quality);
+
+        // Act
+        app.UpdateQuality();
+
+        // Assert
+        Assert.That(item.Quality, Is.EqualTo(expectedQuality));
+    }
+
+    [Test]
+    public void QualityIsNeverIncreasedAboveFifty() {
+        // Arrange
+        var quality = 50;
+        var expectedQuality = quality;
         (GildedRose app, Item item) = GetAppWithSampleItem(name: "Aged Brie", quality: quality);
 
         // Act
@@ -89,7 +103,22 @@ public class GildedRoseTest
         Assert.That(item.Quality, Is.EqualTo(expectedQuality));
     }
 
-    public (GildedRose, Item) GetAppWithSampleItem(string name = "foo", int sellIn = 10, int quality = 10) {
+    [Test]
+    public void QualityIsNeverMoreThanFifty() {
+        // Arrange
+        var quality = 75;
+        var expectedQuality = quality;
+        (GildedRose app, Item item) = GetAppWithSampleItem(quality: quality);
+
+        // Act
+        app.UpdateQuality();
+
+        // Assert
+        Assert.That(item.Quality, Is.EqualTo(expectedQuality));
+    }
+
+    public (GildedRose, Item) GetAppWithSampleItem(string name = "foo", int sellIn = 10, int quality = 10)
+    {
         IList<Item> items = new List<Item> { new Item { Name = name, SellIn = sellIn, Quality = quality } };
         GildedRose app = new GildedRose(items);
 
