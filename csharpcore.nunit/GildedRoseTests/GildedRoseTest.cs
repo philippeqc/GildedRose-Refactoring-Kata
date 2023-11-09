@@ -18,8 +18,7 @@ public class GildedRoseTest
         // Arrange
         var sellIn = 10;
         var expectedSellIn = sellIn - 1;
-        IList<Item> items = GetSampleItem(sellIn: sellIn);
-        GildedRose app = new GildedRose(items);
+        (GildedRose app, IList<Item> items) = GetAppWithSampleItem(sellIn: sellIn);
 
         // Act
         app.UpdateQuality();
@@ -34,8 +33,7 @@ public class GildedRoseTest
         // Arrange
         var quality = 10;
         var expectedQuality = quality - 1;
-        IList<Item> items = GetSampleItem(quality: quality);
-        GildedRose app = new GildedRose(items);
+        (GildedRose app, IList<Item> items) = GetAppWithSampleItem(quality: quality);
 
         // Act
         app.UpdateQuality();
@@ -51,8 +49,7 @@ public class GildedRoseTest
         // Arrange
         var quality = 10;
         var expectedQuality = quality - 2;
-        IList<Item> items = GetSampleItem(sellIn: 0, quality: quality);
-        GildedRose app = new GildedRose(items);
+        (GildedRose app, IList<Item> items) = GetAppWithSampleItem(sellIn: 0, quality: quality);
 
         // Act
         app.UpdateQuality();
@@ -67,9 +64,7 @@ public class GildedRoseTest
         // Arrange
         var quality = 0;
         var expectedQuality = 0;
-        IList<Item> items = GetSampleItem(quality: quality);
-
-        GildedRose app = new GildedRose(items);
+        (GildedRose app, IList<Item> items) = GetAppWithSampleItem(quality: quality);
 
         // Act
         app.UpdateQuality();
@@ -78,8 +73,26 @@ public class GildedRoseTest
         Assert.That(items[0].Quality, Is.EqualTo(expectedQuality));
     }
 
-    public IList<Item>  GetSampleItem(string name = "foo", int sellIn = 10, int quality = 10) {
+
+    [Test]
+    public void AgedBrieRaiseQualityWithTime()
+    {
+        // Arrange
+        var quality = 10;
+        var expectedQuality = quality + 1;
+        (GildedRose app, IList<Item> items) = GetAppWithSampleItem(name: "Aged Brie", quality: quality);
+
+        // Act
+        app.UpdateQuality();
+
+        // Assert
+        Assert.That(items[0].Quality, Is.EqualTo(expectedQuality));
+    }
+
+    public (GildedRose, IList<Item>) GetAppWithSampleItem(string name = "foo", int sellIn = 10, int quality = 10) {
         IList<Item> items = new List<Item> { new Item { Name = name, SellIn = sellIn, Quality = quality } };
-        return items;
+        GildedRose app = new GildedRose(items);
+
+        return (app, items);
     }
 }
