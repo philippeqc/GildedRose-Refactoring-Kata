@@ -78,6 +78,9 @@ Both failed!
 
 Need to use "Sulfuras, Hand of Ragnaros" and not "Sulfuras"
 
+# Backstage passes
+Use "Backstage passes to a TAFKAL80ETC concert"
+
 ```csharp
 ```
 

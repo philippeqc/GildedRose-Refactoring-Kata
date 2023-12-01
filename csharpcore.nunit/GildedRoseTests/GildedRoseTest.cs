@@ -168,4 +168,32 @@ public class GildedRoseTest
         // Assert
         Assert.That(item.Quality, Is.EqualTo(expectedQuality));
     }
+
+    [TestCase(15, 1)]
+    [TestCase(10, 2)]
+    [TestCase(5, 3)]
+    public void BackstagePassIncreaseInQualityFasterAsConcertApproach(int sellIn, int qualityIncrease)
+    {
+        // Arrange
+        Item item = GetSampleItem(name: "Backstage passes to a TAFKAL80ETC concert", sellIn: sellIn);
+        int expectedQuality = item.Quality + qualityIncrease;
+        // Act
+        m_app.UpdateQuality();
+
+        // Assert
+        Assert.That(item.Quality, Is.EqualTo(expectedQuality));
+    }
+
+    [Test]
+    public void BackstagePassQualityDropTo0AfterTheConcert()
+    {
+        // Arrange
+        Item item = GetSampleItem(name: "Backstage passes to a TAFKAL80ETC concert", sellIn: 0);
+        int expectedQuality = 0;
+        // Act
+        m_app.UpdateQuality();
+
+        // Assert
+        Assert.That(item.Quality, Is.EqualTo(expectedQuality));
+    }
 }
