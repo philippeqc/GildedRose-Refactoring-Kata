@@ -3,28 +3,35 @@ using System.Collections.Generic;
 
 namespace GildedRoseKata;
 
-public class SellInDegradeRule {
+public class SellInDegradeRule
+{
     private Item m_item;
-    public SellInDegradeRule(Item item) {m_item = item;}
-    public void UpdateSellIn() {
+    public SellInDegradeRule(Item item) { m_item = item; }
+    public void UpdateSellIn()
+    {
         m_item.SellIn -= 1;
     }
 }
 
-public class QualityDecreaseRule
+public class QualityChangeRule
 {
     private Item m_item;
     private int m_rate;
-    public QualityDecreaseRule(Item item, int rate) { m_item = item; m_rate = rate; }
+    public QualityChangeRule(Item item, int rate)
+    {
+        m_item = item;
+        m_rate = rate;
+    }
+
     public void UpdateQuality()
     {
         if (m_item.SellIn <= 0)
         {
-            m_item.Quality = Math.Max(m_item.Quality - (2 * m_rate), 0);
+            m_item.Quality = Math.Max(m_item.Quality + (2 * m_rate), 0);
         }
         else
         {
-            m_item.Quality = Math.Max(m_item.Quality - m_rate, 0);
+            m_item.Quality = Math.Max(m_item.Quality + m_rate, 0);
         }
     }
 }
@@ -60,7 +67,11 @@ public class BackstagePass : IItemType
 {
     private Item m_item;
     private SellInDegradeRule m_sellInDegradeRule;
-    public BackstagePass(Item item) { m_item = item; m_sellInDegradeRule = new SellInDegradeRule(m_item);}
+    public BackstagePass(Item item)
+    {
+        m_item = item;
+        m_sellInDegradeRule = new SellInDegradeRule(m_item);
+    }
     public void UpdateQuality()
     {
         m_sellInDegradeRule.UpdateSellIn();
@@ -87,17 +98,17 @@ public class Conjured : IItemType
 {
     private Item m_item;
     private SellInDegradeRule m_sellInDegradeRule;
-    private QualityDecreaseRule m_qualityDecreaseRule;
+    private QualityChangeRule m_qualityChangeRule;
     public Conjured(Item item)
     {
         m_item = item;
         m_sellInDegradeRule = new SellInDegradeRule(m_item);
-        m_qualityDecreaseRule = new QualityDecreaseRule(m_item, 2);
+        m_qualityChangeRule = new QualityChangeRule(m_item, -2);
     }
     public void UpdateQuality()
     {
         m_sellInDegradeRule.UpdateSellIn();
-        m_qualityDecreaseRule.UpdateQuality();
+        m_qualityChangeRule.UpdateQuality();
     }
 }
 
@@ -105,17 +116,17 @@ public class Nonspecific : IItemType
 {
     private Item m_item;
     private SellInDegradeRule m_sellInDegradeRule;
-    private QualityDecreaseRule m_qualityDecreaseRule;
+    private QualityChangeRule m_qualityChangeRule;
     public Nonspecific(Item item)
     {
         m_item = item;
         m_sellInDegradeRule = new SellInDegradeRule(m_item);
-        m_qualityDecreaseRule = new QualityDecreaseRule(m_item, 1);
+        m_qualityChangeRule = new QualityChangeRule(m_item, -1);
     }
     public void UpdateQuality()
     {
         m_sellInDegradeRule.UpdateSellIn();
-        m_qualityDecreaseRule.UpdateQuality();
+        m_qualityChangeRule.UpdateQuality();
     }
 }
 
