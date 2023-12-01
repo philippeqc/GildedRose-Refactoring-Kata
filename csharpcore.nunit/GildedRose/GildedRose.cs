@@ -10,6 +10,19 @@ public class Sulfuras
     public void UpdateQuality() { }
 }
 
+public class AgedBrie
+{
+    private Item m_item;
+    public AgedBrie(Item item) { m_item = item; }
+    public void UpdateQuality()
+    {
+        if (m_item.Quality < 50)
+        {
+            m_item.Quality += 1;
+        }
+    }
+}
+
 public class GildedRose
 {
     private readonly IList<Item> _items;
@@ -40,10 +53,8 @@ public class GildedRose
 
         if (item.Name == "Aged Brie")
         {
-            if (item.Quality < 50)
-            {
-                item.Quality = item.Quality + 1;
-            }
+            AgedBrie agedBrie = new AgedBrie(item);
+            agedBrie.UpdateQuality();
             return;
         }
 
