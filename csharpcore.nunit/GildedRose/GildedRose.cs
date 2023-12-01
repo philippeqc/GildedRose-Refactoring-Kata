@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace GildedRoseKata;
+
 
 public class GildedRose
 {
@@ -21,74 +23,52 @@ public class GildedRose
 
     public void UpdateItemQuality(Item item)
     {
-        if (item.Name != "Aged Brie" && item.Name != "Backstage passes to a TAFKAL80ETC concert")
+        if (item.Name == "Aged Brie")
         {
-            if (item.Quality > 0)
-            {
-                if (item.Name != "Sulfuras, Hand of Ragnaros")
-                {
-                    item.Quality = item.Quality - 1;
-                }
-            }
-        }
-        else
-        {
+            item.SellIn = item.SellIn - 1;
             if (item.Quality < 50)
             {
                 item.Quality = item.Quality + 1;
-
-                if (item.Name == "Backstage passes to a TAFKAL80ETC concert")
-                {
-                    if (item.SellIn < 11)
-                    {
-                        if (item.Quality < 50)
-                        {
-                            item.Quality = item.Quality + 1;
-                        }
-                    }
-
-                    if (item.SellIn < 6)
-                    {
-                        if (item.Quality < 50)
-                        {
-                            item.Quality = item.Quality + 1;
-                        }
-                    }
-                }
             }
+            return;
         }
 
-        if (item.Name != "Sulfuras, Hand of Ragnaros")
+        if (item.Name == "Sulfuras, Hand of Ragnaros")
+        {
+            return;
+        }
+
+        if (item.Name == "Backstage passes to a TAFKAL80ETC concert")
         {
             item.SellIn = item.SellIn - 1;
-        }
-
-        if (item.SellIn < 0)
-        {
-            if (item.Name != "Aged Brie")
+            if (item.SellIn <= 0)
             {
-                if (item.Name != "Backstage passes to a TAFKAL80ETC concert")
-                {
-                    if (item.Quality > 0)
-                    {
-                        if (item.Name != "Sulfuras, Hand of Ragnaros")
-                        {
-                            item.Quality = item.Quality - 1;
-                        }
-                    }
-                }
-                else
-                {
-                    item.Quality = item.Quality - item.Quality;
-                }
+                item.Quality = 0;
+            }
+            else if (item.SellIn <= 5)
+            {
+                item.Quality += 3;
+            }
+            else if (item.SellIn <= 10)
+            {
+                item.Quality += 2;
             }
             else
             {
-                if (item.Quality < 50)
-                {
-                    item.Quality = item.Quality + 1;
-                }
+                item.Quality += 1;
             }
+            return;
         }
+
+        item.SellIn -= 1;
+        if (item.SellIn <= 0)
+        {
+            item.Quality = Math.Max(item.Quality - 2, 0);
+        }
+        else
+        {
+            item.Quality = Math.Max(item.Quality - 1, 0);
+        }
+        return;
     }
 }
