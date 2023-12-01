@@ -23,9 +23,15 @@ public class GildedRose
 
     public void UpdateItemQuality(Item item)
     {
+        if (item.Name == "Sulfuras, Hand of Ragnaros")
+        {
+            return;
+        }
+
+        item.SellIn -= 1;
+
         if (item.Name == "Aged Brie")
         {
-            item.SellIn = item.SellIn - 1;
             if (item.Quality < 50)
             {
                 item.Quality = item.Quality + 1;
@@ -33,14 +39,8 @@ public class GildedRose
             return;
         }
 
-        if (item.Name == "Sulfuras, Hand of Ragnaros")
-        {
-            return;
-        }
-
         if (item.Name == "Backstage passes to a TAFKAL80ETC concert")
         {
-            item.SellIn = item.SellIn - 1;
             if (item.SellIn <= 0)
             {
                 item.Quality = 0;
@@ -60,7 +60,6 @@ public class GildedRose
             return;
         }
 
-        item.SellIn -= 1;
         if (item.SellIn <= 0)
         {
             item.Quality = Math.Max(item.Quality - 2, 0);
