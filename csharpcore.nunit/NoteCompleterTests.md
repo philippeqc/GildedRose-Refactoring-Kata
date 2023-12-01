@@ -63,6 +63,14 @@ Item item = GetSampleItem(name: "Sulfuras");
 m_app.UpdateQuality();
 ```
 Notez `app` en `m_app`.
+
+# Add snippet
+Added "aaa".
+- Snippets: Configure user snippets
+- New snippets file for `csharpcore.nunit`
+- Named the file
+
+Commit avec `git add -f .\.vscode\cs.code-snippets`
 ```csharp
 ```
 
