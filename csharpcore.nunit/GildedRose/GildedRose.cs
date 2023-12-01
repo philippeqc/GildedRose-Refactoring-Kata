@@ -23,6 +23,31 @@ public class AgedBrie
     }
 }
 
+public class BackstagePass
+{
+    private Item m_item;
+    public BackstagePass(Item item) { m_item = item; }
+    public void UpdateQuality()
+    {
+        if (m_item.SellIn <= 0)
+        {
+            m_item.Quality = 0;
+        }
+        else if (m_item.SellIn <= 5)
+        {
+            m_item.Quality += 3;
+        }
+        else if (m_item.SellIn <= 10)
+        {
+            m_item.Quality += 2;
+        }
+        else
+        {
+            m_item.Quality += 1;
+        }
+    }
+}
+
 public class GildedRose
 {
     private readonly IList<Item> _items;
@@ -60,22 +85,8 @@ public class GildedRose
 
         if (item.Name == "Backstage passes to a TAFKAL80ETC concert")
         {
-            if (item.SellIn <= 0)
-            {
-                item.Quality = 0;
-            }
-            else if (item.SellIn <= 5)
-            {
-                item.Quality += 3;
-            }
-            else if (item.SellIn <= 10)
-            {
-                item.Quality += 2;
-            }
-            else
-            {
-                item.Quality += 1;
-            }
+            BackstagePass backstagePass = new BackstagePass(item);
+            backstagePass.UpdateQuality();
             return;
         }
 
