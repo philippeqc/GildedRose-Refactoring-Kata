@@ -33,6 +33,8 @@ public class QualityChangeRule
         {
             m_item.Quality = Math.Max(m_item.Quality + m_rate, 0);
         }
+
+        m_item.Quality = Math.Min(m_item.Quality, 50);
     }
 }
 
@@ -52,14 +54,17 @@ public class AgedBrie : IItemType
 {
     private Item m_item;
     private SellInDegradeRule m_sellInDegradeRule;
-    public AgedBrie(Item item) { m_item = item; m_sellInDegradeRule = new SellInDegradeRule(m_item);}
+    private QualityChangeRule m_qualityChangeRule;
+    public AgedBrie(Item item)
+    {
+        m_item = item;
+        m_sellInDegradeRule = new SellInDegradeRule(m_item);
+        m_qualityChangeRule = new QualityChangeRule(m_item, 1);
+    }
     public void UpdateQuality()
     {
         m_sellInDegradeRule.UpdateSellIn();
-        if (m_item.Quality < 50)
-        {
-            m_item.Quality += 1;
-        }
+        m_qualityChangeRule.UpdateQuality();
     }
 }
 

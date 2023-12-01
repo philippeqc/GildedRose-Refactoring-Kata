@@ -114,8 +114,8 @@ public class GildedRoseTest
         Assert.That(item.Quality, Is.EqualTo(expectedQuality));
     }
 
-    [TestCase("Some item", 75, 74)]
-    [TestCase("Aged Brie", 75, 75)]
+    [TestCase("Some item", 75, 50)]
+    [TestCase("Aged Brie", 75, 50)]
     public void QualityIsNeverMoreThan50_AsATestCase(string name, int startQuality, int endQuality)
     {
         // Arrange
@@ -129,8 +129,8 @@ public class GildedRoseTest
         Assert.That(item.Quality, Is.EqualTo(expectedQuality));
     }
 
-    [TestCase("Some item", 75, ExpectedResult = 74)]
-    [TestCase("Aged Brie", 75, ExpectedResult = 75)]
+    [TestCase("Some item", 75, ExpectedResult = 50)]
+    [TestCase("Aged Brie", 75, ExpectedResult = 50)]
     public int QualityIsNeverMoreThan50_AsATestCaseWithExpectedResult(string name, int startQuality)
     {
         // Arrange
