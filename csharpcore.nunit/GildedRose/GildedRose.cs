@@ -3,6 +3,12 @@ using System.Collections.Generic;
 
 namespace GildedRoseKata;
 
+public class Sulfuras
+{
+    private Item m_item;
+    public Sulfuras(Item item) { m_item = item; }
+    public void UpdateQuality() { }
+}
 
 public class GildedRose
 {
@@ -25,6 +31,8 @@ public class GildedRose
     {
         if (item.Name == "Sulfuras, Hand of Ragnaros")
         {
+            Sulfuras sulfuras = new Sulfuras(item);
+            sulfuras.UpdateQuality();
             return;
         }
 
