@@ -3,14 +3,19 @@ using System.Collections.Generic;
 
 namespace GildedRoseKata;
 
-public class Sulfuras
+public interface IItemType
+{
+    void UpdateQuality();
+}
+
+public class Sulfuras : IItemType
 {
     private Item m_item;
     public Sulfuras(Item item) { m_item = item; }
     public void UpdateQuality() { }
 }
 
-public class AgedBrie
+public class AgedBrie : IItemType
 {
     private Item m_item;
     public AgedBrie(Item item) { m_item = item; }
@@ -23,7 +28,7 @@ public class AgedBrie
     }
 }
 
-public class BackstagePass
+public class BackstagePass : IItemType
 {
     private Item m_item;
     public BackstagePass(Item item) { m_item = item; }
@@ -48,7 +53,7 @@ public class BackstagePass
     }
 }
 
-public class Conjured
+public class Conjured : IItemType
 {
     private Item m_item;
     public Conjured(Item item) { m_item = item; }
@@ -65,7 +70,7 @@ public class Conjured
     }
 }
 
-public class Nonspecific
+public class Nonspecific : IItemType
 {
     private Item m_item;
     public Nonspecific(Item item) { m_item = item; }
@@ -101,10 +106,12 @@ public class GildedRose
 
     public void UpdateItemQuality(Item item)
     {
+        IItemType itemType;
+
         if (item.Name == "Sulfuras, Hand of Ragnaros")
         {
-            Sulfuras sulfuras = new Sulfuras(item);
-            sulfuras.UpdateQuality();
+            itemType = new Sulfuras(item);
+            itemType.UpdateQuality();
             return;
         }
 
@@ -112,25 +119,20 @@ public class GildedRose
 
         if (item.Name == "Aged Brie")
         {
-            AgedBrie agedBrie = new AgedBrie(item);
-            agedBrie.UpdateQuality();
-            return;
+            itemType = new AgedBrie(item);
         }
-
-        if (item.Name == "Backstage passes to a TAFKAL80ETC concert")
+        else if (item.Name == "Backstage passes to a TAFKAL80ETC concert")
         {
-            BackstagePass backstagePass = new BackstagePass(item);
-            backstagePass.UpdateQuality();
-            return;
+            itemType = new BackstagePass(item);
         }
-
-        if(item.Name == "Conjured") {
-            Conjured conjured = new Conjured(item);
-            conjured.UpdateQuality();
-            return;
+        else if (item.Name == "Conjured")
+        {
+            itemType = new Conjured(item);
         }
-
-        Nonspecific nonspecific = new Nonspecific(item);
-        nonspecific.UpdateQuality();
+        else
+        {
+            itemType = new Nonspecific(item);
+        }
+        itemType.UpdateQuality();
     }
 }
