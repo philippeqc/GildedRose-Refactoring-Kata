@@ -65,6 +65,23 @@ public class Conjured
     }
 }
 
+public class Nonspecific
+{
+    private Item m_item;
+    public Nonspecific(Item item) { m_item = item; }
+    public void UpdateQuality()
+    {
+        if (m_item.SellIn <= 0)
+        {
+            m_item.Quality = Math.Max(m_item.Quality - 2, 0);
+        }
+        else
+        {
+            m_item.Quality = Math.Max(m_item.Quality - 1, 0);
+        }
+    }
+}
+
 public class GildedRose
 {
     private readonly IList<Item> _items;
@@ -113,14 +130,7 @@ public class GildedRose
             return;
         }
 
-        if (item.SellIn <= 0)
-        {
-            item.Quality = Math.Max(item.Quality - 2, 0);
-        }
-        else
-        {
-            item.Quality = Math.Max(item.Quality - 1, 0);
-        }
-        return;
+        Nonspecific nonspecific = new Nonspecific(item);
+        nonspecific.UpdateQuality();
     }
 }
