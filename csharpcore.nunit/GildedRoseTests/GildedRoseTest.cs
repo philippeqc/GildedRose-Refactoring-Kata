@@ -6,9 +6,21 @@ namespace GildedRoseTests;
 
 public class GildedRoseTest
 {
+    protected Item GetSampleItem(string name = "foo", int sellIn = 10, int quality = 10)
+    {
+        Item item = new Item { Name = name, SellIn = sellIn, Quality = quality };
+        m_items.Add(item);
+
+        return item;
+    }
+
+    protected IList<Item> m_items = new List<Item>();
+    protected GildedRose m_app;
+
     [SetUp]
     public void Setup()
     {
+        m_app = new GildedRose(m_items);
     }
 
     [Test]
