@@ -3,6 +3,14 @@ using System.Collections.Generic;
 
 namespace GildedRoseKata;
 
+public class SellInDegradeRule {
+    private Item m_item;
+    public SellInDegradeRule(Item item) {m_item = item;}
+    public void UpdateSellIn() {
+        m_item.SellIn -= 1;
+    }
+}
+
 public interface IItemType
 {
     void UpdateQuality();
@@ -18,9 +26,11 @@ public class Sulfuras : IItemType
 public class AgedBrie : IItemType
 {
     private Item m_item;
-    public AgedBrie(Item item) { m_item = item; }
+    private SellInDegradeRule m_sellInDegradeRule;
+    public AgedBrie(Item item) { m_item = item; m_sellInDegradeRule = new SellInDegradeRule(m_item);}
     public void UpdateQuality()
     {
+        m_sellInDegradeRule.UpdateSellIn();
         if (m_item.Quality < 50)
         {
             m_item.Quality += 1;
@@ -31,9 +41,11 @@ public class AgedBrie : IItemType
 public class BackstagePass : IItemType
 {
     private Item m_item;
-    public BackstagePass(Item item) { m_item = item; }
+    private SellInDegradeRule m_sellInDegradeRule;
+    public BackstagePass(Item item) { m_item = item; m_sellInDegradeRule = new SellInDegradeRule(m_item);}
     public void UpdateQuality()
     {
+        m_sellInDegradeRule.UpdateSellIn();
         if (m_item.SellIn <= 0)
         {
             m_item.Quality = 0;
@@ -56,9 +68,11 @@ public class BackstagePass : IItemType
 public class Conjured : IItemType
 {
     private Item m_item;
-    public Conjured(Item item) { m_item = item; }
+    private SellInDegradeRule m_sellInDegradeRule;
+    public Conjured(Item item) { m_item = item; m_sellInDegradeRule = new SellInDegradeRule(m_item);}
     public void UpdateQuality()
     {
+        m_sellInDegradeRule.UpdateSellIn();
         if (m_item.SellIn <= 0)
         {
             m_item.Quality = Math.Max(m_item.Quality - 4, 0);
@@ -73,9 +87,11 @@ public class Conjured : IItemType
 public class Nonspecific : IItemType
 {
     private Item m_item;
-    public Nonspecific(Item item) { m_item = item; }
+    private SellInDegradeRule m_sellInDegradeRule;
+    public Nonspecific(Item item) { m_item = item; m_sellInDegradeRule = new SellInDegradeRule(m_item);}
     public void UpdateQuality()
     {
+        m_sellInDegradeRule.UpdateSellIn();
         if (m_item.SellIn <= 0)
         {
             m_item.Quality = Math.Max(m_item.Quality - 2, 0);
@@ -114,8 +130,6 @@ public class GildedRose
             itemType.UpdateQuality();
             return;
         }
-
-        item.SellIn -= 1;
 
         if (item.Name == "Aged Brie")
         {
