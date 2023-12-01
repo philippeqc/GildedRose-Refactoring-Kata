@@ -60,6 +60,18 @@ public class GildedRose
             return;
         }
 
+        if(item.Name == "Conjured") {
+            if (item.SellIn <= 0)
+            {
+                item.Quality = Math.Max(item.Quality - 4, 0);
+            }
+            else
+            {
+                item.Quality = Math.Max(item.Quality - 2, 0);
+            }
+            return;
+        }
+
         if (item.SellIn <= 0)
         {
             item.Quality = Math.Max(item.Quality - 2, 0);

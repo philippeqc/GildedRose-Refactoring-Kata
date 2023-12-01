@@ -198,7 +198,6 @@ public class GildedRoseTest
     }
 
     [Test]
-    [Ignore("Ignore as long as not ready to implement")]
     public void ConjuredItemsQualityDegradeTwiceAsFast()
     {
         // Arrange
@@ -212,7 +211,6 @@ public class GildedRoseTest
     }
 
     [Test]
-    [Ignore("Ignore as long as not ready to implement")]
     public void ConjuredItemsQualityDegradeTwiceAsFastAfterSellIn()
     {
         // Arrange
