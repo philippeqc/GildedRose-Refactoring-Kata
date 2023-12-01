@@ -71,6 +71,13 @@ Added "aaa".
 - Named the file
 
 Commit avec `git add -f .\.vscode\cs.code-snippets`
+
+# Sulfuras
+Added 2 tests, `SulfurasNeverHasToBeSold` and `SulfurasNeverDecreaseInQuality`.
+Both failed!
+
+Need to use "Sulfuras, Hand of Ragnaros" and not "Sulfuras"
+
 ```csharp
 ```
 

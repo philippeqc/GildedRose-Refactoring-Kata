@@ -147,7 +147,7 @@ public class GildedRoseTest
     public void SulfurasNeverHasToBeSold()
     {
         // Arrange
-        Item item = GetSampleItem(name: "Sulfuras");
+        Item item = GetSampleItem(name: "Sulfuras, Hand of Ragnaros");
         int expectedSellIn = item.SellIn;
         // Act
         m_app.UpdateQuality();
@@ -160,7 +160,7 @@ public class GildedRoseTest
     public void SulfurasNeverDecreaseInQuality()
     {
         // Arrange
-        Item item = GetSampleItem(name: "Sulfuras");
+        Item item = GetSampleItem(name: "Sulfuras, Hand of Ragnaros");
         int expectedQuality = item.Quality;
         // Act
         m_app.UpdateQuality();
@@ -168,5 +168,4 @@ public class GildedRoseTest
         // Assert
         Assert.That(item.Quality, Is.EqualTo(expectedQuality));
     }
-    // "Sulfuras", being a legendary item, never has to be sold or decreases in Quality
 }
