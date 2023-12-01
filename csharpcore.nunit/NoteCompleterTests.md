@@ -81,11 +81,5 @@ Need to use "Sulfuras, Hand of Ragnaros" and not "Sulfuras"
 # Backstage passes
 Use "Backstage passes to a TAFKAL80ETC concert"
 
-```csharp
-```
-
-```csharp
-```
-
-```csharp
-```
+# Conjured
+Test implemented, no changes done to the application's code.

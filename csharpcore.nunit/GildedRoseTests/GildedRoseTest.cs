@@ -196,4 +196,30 @@ public class GildedRoseTest
         // Assert
         Assert.That(item.Quality, Is.EqualTo(expectedQuality));
     }
+
+    [Test]
+    public void ConjuredItemsQualityDegradeTwiceAsFast()
+    {
+        // Arrange
+        Item item = GetSampleItem(name: "Conjured");
+        int expectedQuality = item.Quality - 2;
+        // Act
+        m_app.UpdateQuality();
+
+        // Assert
+        Assert.That(item.Quality, Is.EqualTo(expectedQuality));
+    }
+
+    [Test]
+    public void ConjuredItemsQualityDegradeTwiceAsFastAfterSellIn()
+    {
+        // Arrange
+        Item item = GetSampleItem(name: "Conjured", sellIn: 0);
+        int expectedQuality = item.Quality - (2 * 2);
+        // Act
+        m_app.UpdateQuality();
+
+        // Assert
+        Assert.That(item.Quality, Is.EqualTo(expectedQuality));
+    }
 }
