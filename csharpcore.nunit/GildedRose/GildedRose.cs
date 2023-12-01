@@ -48,6 +48,23 @@ public class BackstagePass
     }
 }
 
+public class Conjured
+{
+    private Item m_item;
+    public Conjured(Item item) { m_item = item; }
+    public void UpdateQuality()
+    {
+        if (m_item.SellIn <= 0)
+        {
+            m_item.Quality = Math.Max(m_item.Quality - 4, 0);
+        }
+        else
+        {
+            m_item.Quality = Math.Max(m_item.Quality - 2, 0);
+        }
+    }
+}
+
 public class GildedRose
 {
     private readonly IList<Item> _items;
@@ -91,14 +108,8 @@ public class GildedRose
         }
 
         if(item.Name == "Conjured") {
-            if (item.SellIn <= 0)
-            {
-                item.Quality = Math.Max(item.Quality - 4, 0);
-            }
-            else
-            {
-                item.Quality = Math.Max(item.Quality - 2, 0);
-            }
+            Conjured conjured = new Conjured(item);
+            conjured.UpdateQuality();
             return;
         }
 
