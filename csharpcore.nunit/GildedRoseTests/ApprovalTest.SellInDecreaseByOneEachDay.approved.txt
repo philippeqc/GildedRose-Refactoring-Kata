@@ -1,0 +1,1 @@
+﻿Name: foo, SellIn: 9, Quality: 9

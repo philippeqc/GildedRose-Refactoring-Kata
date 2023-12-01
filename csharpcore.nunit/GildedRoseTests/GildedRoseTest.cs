@@ -102,17 +102,32 @@ public class GildedRoseTest
         Assert.That(item.Quality, Is.EqualTo(expectedQuality));
     }
 
-    [Test]
-    public void QualityIsNeverMoreThanFifty() {
+    [TestCase("Some item", 75, 74)]
+    [TestCase("Aged Brie", 75, 75)]
+    public void QualityIsNeverMoreThan50_AsATestCase(string name, int startQuality, int endQuality)
+    {
         // Arrange
-        var quality = 75;
-        var expectedQuality = quality;
-        (GildedRose app, Item item) = Helper.GetAppWithSampleItem(quality: quality);
+        var expectedQuality = endQuality;
+        (GildedRose app, Item item) = Helper.GetAppWithSampleItem(name: name, quality: startQuality);
 
         // Act
         app.UpdateQuality();
 
         // Assert
         Assert.That(item.Quality, Is.EqualTo(expectedQuality));
+    }
+
+    [TestCase("Some item", 75, ExpectedResult = 74)]
+    [TestCase("Aged Brie", 75, ExpectedResult = 75)]
+    public int QualityIsNeverMoreThan50_AsATestCaseWithExpectedResult(string name, int startQuality)
+    {
+        // Arrange
+        (GildedRose app, Item item) = Helper.GetAppWithSampleItem(name: name, quality: startQuality);
+
+        // Act
+        app.UpdateQuality();
+
+        // Assert
+        return item.Quality;
     }
 }
