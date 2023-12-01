@@ -159,11 +159,8 @@ public class GildedRose
         if (item.Name == "Sulfuras, Hand of Ragnaros")
         {
             itemType = new Sulfuras(item);
-            itemType.UpdateQuality();
-            return;
         }
-
-        if (item.Name == "Aged Brie")
+        else if (item.Name == "Aged Brie")
         {
             itemType = new AgedBrie(item);
         }
