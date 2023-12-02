@@ -8,7 +8,7 @@ public class GildedRoseRule
 {
     public IDictionary<string, ItemRule> rules { get; }
     private ItemRule defaultRule;
-    public ItemRule DefaultRule { get { return defaultRule; } }
+    public ItemRule Default { get { return defaultRule; } }
 
     public GildedRoseRule()
     {
@@ -18,6 +18,6 @@ public class GildedRoseRule
             { "Sulfuras, Hand of Ragnaros", SulfurasRule.Rule() },
             { "Aged Brie", AgedBrieRule.Rule() }
         };
-        defaultRule = new DefaultRule().rule;
+        defaultRule = DefaultRule.Rule();
     }
 }

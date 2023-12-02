@@ -4,11 +4,9 @@ namespace GildedRoseKata.Domain.Rule;
 
 public class DefaultRule
 {
-    public ItemRule rule;
-
-    public DefaultRule()
+    public static ItemRule Rule()
     {
-        rule = new ChainedItemRule(
+        return new ChainedItemRule(
             new SellInDecreaseEverydayRule(),
             new QualityChangeRule(-1),
             new WhenSellInLowerOrEqualThanRule(new QualityChangeRule(-1), sellInLowerOrEqual: 0),

@@ -39,7 +39,7 @@ public static class TextTestFixture
         };
 
         GildedRoseRule ruleCreator = new GildedRoseRule();
-        var app = new GildedRose(items, ruleCreator.rules, ruleCreator.DefaultRule);
+        var app = new GildedRose(items, ruleCreator.rules, ruleCreator.Default);
 
         int days = 31;
         if (args.Length > 0)

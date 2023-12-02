@@ -22,7 +22,7 @@ public class GildedRoseTest
     [SetUp]
     public void Setup()
     {
-        m_app = new GildedRose(m_items, ruleCreator.rules, ruleCreator.DefaultRule);
+        m_app = new GildedRose(m_items, ruleCreator.rules, ruleCreator.Default);
     }
 
     [Test]
