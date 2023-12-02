@@ -200,9 +200,8 @@ public class GildedRoseTest
         // Assert
         Assert.That(item.Quality, Is.EqualTo(expectedQuality));
     }
-    
+
     [Test, Description("Does it display on failure")]
-    [Ignore("Conjured items not yet implemented")]
     public void ConjuredItemQualityDegradeTwiceAsFast()
     {
         // Arrange
@@ -212,6 +211,20 @@ public class GildedRoseTest
         // Act
         m_app.UpdateQuality();
     
+        // Assert
+        Assert.That(item.Quality, Is.EqualTo(expectedQuality));
+    }
+
+    [Test, Description("Does it display on failure")]
+    public void ConjuredItemQualityDegradeTwiceAsFastAfterSellIn()
+    {
+        // Arrange
+        Item item = GetSampleItem(name: "Conjured Mana Cake", sellIn: 0);
+        var expectedQuality = item.Quality - (2 * 2);
+
+        // Act
+        m_app.UpdateQuality();
+
         // Assert
         Assert.That(item.Quality, Is.EqualTo(expectedQuality));
     }

@@ -16,6 +16,7 @@ public class GildedRoseRule
         {
             { "Backstage passes to a TAFKAL80ETC concert", BackstagePassesRule.Rule() },
             { "Sulfuras, Hand of Ragnaros", SulfurasRule.Rule() },
+            { "Conjured Mana Cake", ConjuredRule.Rule() },
             { "Aged Brie", AgedBrieRule.Rule() }
         };
         defaultRule = DefaultRule.Rule();
