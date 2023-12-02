@@ -4,10 +4,9 @@ namespace GildedRoseKata.Domain.Rule;
 
 public class AgedBrieRule
 {
-    public ItemRule rule;
-    public AgedBrieRule()
+    public static ItemRule Rule()
     {
-        rule = new ChainedItemRule(
+        return new ChainedItemRule(
             new SellInDecreaseEverydayRule(),
             new QualityChangeRule(1),
             new QualityValueRangeRule(0, 50)

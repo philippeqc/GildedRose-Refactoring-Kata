@@ -5,13 +5,16 @@ namespace GildedRoseKata.Domain.Rule;
 
 public class BackstagePassesRule
 {
-    public ItemRule rule { get; }
-
-    public BackstagePassesRule()
+    public static ItemRule Rule()
     {
-        rule = new ChainedItemRule(
+        return new ChainedItemRule(
             new SellInDecreaseEverydayRule(),
-            new BackstagePassesQualityRule().rule,
+            new ChainedItemRule(
+                new QualityChangeRule(1),
+                new WhenSellInLowerOrEqualThanRule(new QualityChangeRule(1), sellInLowerOrEqual: 10),
+                new WhenSellInLowerOrEqualThanRule(new QualityChangeRule(1), sellInLowerOrEqual: 5),
+                new QualityConstantRule(0, fromSellIn: 0)
+            ),
             new QualityValueRangeRule(0, 50)
         );
     }
