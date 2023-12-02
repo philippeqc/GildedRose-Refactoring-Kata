@@ -7,40 +7,36 @@ namespace GildedRoseTests;
 
 public class GildedRoseTest
 {
+    protected Item GetSampleItem(string name = "Some Object", int sellIn = 10, int quality = 20)
+    {
+        Item item = new Item { Name = name, SellIn = sellIn, Quality = quality };
+        m_items.Add(item);
+
+        return item;
+    }
+
+    protected IList<Item> m_items = new List<Item>();
+    protected GildedRose m_app;
     private GildedRoseRule ruleCreator = new GildedRoseRule();
 
-    IList<Item> GetSampleItem(string name = "Some Object", int sellIn = 10, int quality = 20)
-    {
-        IList<Item> items = new List<Item> { new() { Name = name, SellIn = sellIn, Quality = quality } };
-        return items;
-    }
-
-    int GetFirstItemQuality(IList<Item> items)
-    {
-        return items[0].Quality;
-    }
-
-    int GetFirstItemSellIn(IList<Item> items)
-    {
-        return items[0].SellIn;
-    }
-
     [SetUp]
-    public void Setup(){}
-    
+    public void Setup()
+    {
+        m_app = new GildedRose(m_items, ruleCreator.rules, ruleCreator.DefaultRule);
+    }
+
     [Test]
     public void SellInDegradeAtTheEndOfEachDay()
     {
         // Arrange
-        IList<Item> items = GetSampleItem();
-        var expectedSellIn = GetFirstItemSellIn(items) - 1;
+        Item item = GetSampleItem();
+        var expectedSellIn = item.SellIn - 1;
 
         // Act
-        GildedRose app = new(items, ruleCreator.rules, ruleCreator.DefaultRule);
-        app.UpdateQuality();
+        m_app.UpdateQuality();
 
         // Assert
-        Assert.That(items[0].SellIn, Is.EqualTo(expectedSellIn));
+        Assert.That(item.SellIn, Is.EqualTo(expectedSellIn));
     }
     
     
@@ -48,30 +44,28 @@ public class GildedRoseTest
     public void QualityDegradeAtTheEndOfEachDay()
     {
         // Arrange
-        IList<Item> items = GetSampleItem();
-        var expectedQuality = GetFirstItemQuality(items) - 1;
+        Item item = GetSampleItem();
+        var expectedQuality = item.Quality - 1;
     
         // Act
-        GildedRose app = new(items, ruleCreator.rules, ruleCreator.DefaultRule);
-        app.UpdateQuality();
+        m_app.UpdateQuality();
     
         // Assert
-        Assert.That(items[0].Quality, Is.EqualTo(expectedQuality));
+        Assert.That(item.Quality, Is.EqualTo(expectedQuality));
     }
     
     [Test]
     public void QualityDegradeTwiceAsFastAfterSellInDate()
     {
         // Arrange
-        IList<Item> items = GetSampleItem(sellIn: 0);
-        var expectedQuality = GetFirstItemQuality(items) - 2;
+        Item item = GetSampleItem(sellIn: 0);
+        var expectedQuality = item.Quality - 2;
     
         // Act
-        GildedRose app = new(items, ruleCreator.rules, ruleCreator.DefaultRule);
-        app.UpdateQuality();
+        m_app.UpdateQuality();
     
         // Assert
-        Assert.That(items[0].Quality, Is.EqualTo(expectedQuality));
+        Assert.That(item.Quality, Is.EqualTo(expectedQuality));
     }
     
     [Test]
@@ -80,29 +74,27 @@ public class GildedRoseTest
         // Arrange
         var quality = 1;
         var expectedQuality = Math.Max(quality - 2, 0);
-        IList<Item> items = GetSampleItem(sellIn: 0, quality: quality);
+        Item item = GetSampleItem(sellIn: 0, quality: quality);
     
         // Act
-        GildedRose app = new(items, ruleCreator.rules, ruleCreator.DefaultRule);
-        app.UpdateQuality();
+        m_app.UpdateQuality();
     
         // Assert
-        Assert.That(items[0].Quality, Is.EqualTo(expectedQuality));
+        Assert.That(item.Quality, Is.EqualTo(expectedQuality));
     }
     
     [Test]
     public void AgedBrieQualityIncreasesWithTime()
     {
         // Arrange
-        IList<Item> items = GetSampleItem(name: "Aged Brie");
-        var expectedQuality = GetFirstItemQuality(items) + 1;
+        Item item = GetSampleItem(name: "Aged Brie");
+        var expectedQuality = item.Quality + 1;
     
         // Act
-        GildedRose app = new(items, ruleCreator.rules, ruleCreator.DefaultRule);
-        app.UpdateQuality();
+        m_app.UpdateQuality();
     
         // Assert
-        Assert.That(items[0].Quality, Is.EqualTo(expectedQuality));
+        Assert.That(item.Quality, Is.EqualTo(expectedQuality));
     }
     
     [Test]
@@ -111,29 +103,27 @@ public class GildedRoseTest
         // Arrange
         var quality = 50;
         var expectedQuality = quality;
-        IList<Item> items = GetSampleItem(name: "Aged Brie", quality: quality);
+        Item item = GetSampleItem(name: "Aged Brie", quality: quality);
     
         // Act
-        GildedRose app = new(items, ruleCreator.rules, ruleCreator.DefaultRule);
-        app.UpdateQuality();
+        m_app.UpdateQuality();
     
         // Assert
-        Assert.That(items[0].Quality, Is.EqualTo(expectedQuality));
+        Assert.That(item.Quality, Is.EqualTo(expectedQuality));
     }
     
     [Test]
     public void SulfurasDontHaveToBeSold()
     {
         // Arrange
-        IList<Item> items = GetSampleItem(name: "Sulfuras, Hand of Ragnaros");
-        var expectedSellIn = GetFirstItemSellIn(items);
+        Item item = GetSampleItem(name: "Sulfuras, Hand of Ragnaros");
+        var expectedSellIn = item.SellIn;
     
         // Act
-        GildedRose app = new(items, ruleCreator.rules, ruleCreator.DefaultRule);
-        app.UpdateQuality();
+        m_app.UpdateQuality();
     
         // Assert
-        Assert.That(items[0].SellIn, Is.EqualTo(expectedSellIn));
+        Assert.That(item.SellIn, Is.EqualTo(expectedSellIn));
     }
     
     [Test]
@@ -142,14 +132,13 @@ public class GildedRoseTest
         // Arrange
         var quality = 80;
         var expectedQuality = quality;
-        IList<Item> items = GetSampleItem(name: "Sulfuras, Hand of Ragnaros", quality: quality);
+        Item item = GetSampleItem(name: "Sulfuras, Hand of Ragnaros", quality: quality);
     
         // Act
-        GildedRose app = new(items, ruleCreator.rules, ruleCreator.DefaultRule);
-        app.UpdateQuality();
+        m_app.UpdateQuality();
     
         // Assert
-        Assert.That(items[0].Quality, Is.EqualTo(expectedQuality));
+        Assert.That(item.Quality, Is.EqualTo(expectedQuality));
     }
     
     [Test]
@@ -157,15 +146,14 @@ public class GildedRoseTest
     {
         // Arrange
         var moreThan10Days = 20;
-        IList<Item> items = GetSampleItem(name: "Backstage passes to a TAFKAL80ETC concert", sellIn: moreThan10Days);
-        var expectedQuality = GetFirstItemQuality(items) + 1;
+        Item item = GetSampleItem(name: "Backstage passes to a TAFKAL80ETC concert", sellIn: moreThan10Days);
+        var expectedQuality = item.Quality + 1;
     
         // Act
-        GildedRose app = new(items, ruleCreator.rules, ruleCreator.DefaultRule);
-        app.UpdateQuality();
+        m_app.UpdateQuality();
     
         // Assert
-        Assert.That(items[0].Quality, Is.EqualTo(expectedQuality));
+        Assert.That(item.Quality, Is.EqualTo(expectedQuality));
     }
     
     [Test]
@@ -173,15 +161,14 @@ public class GildedRoseTest
     {
         // Arrange
         var within10Days = 10;
-        IList<Item> items = GetSampleItem(name: "Backstage passes to a TAFKAL80ETC concert", sellIn: within10Days);
-        var expectedQuality = GetFirstItemQuality(items) + 2;
+        Item item = GetSampleItem(name: "Backstage passes to a TAFKAL80ETC concert", sellIn: within10Days);
+        var expectedQuality = item.Quality + 2;
     
         // Act
-        GildedRose app = new(items, ruleCreator.rules, ruleCreator.DefaultRule);
-        app.UpdateQuality();
+        m_app.UpdateQuality();
     
         // Assert
-        Assert.That(items[0].Quality, Is.EqualTo(expectedQuality));
+        Assert.That(item.Quality, Is.EqualTo(expectedQuality));
     }
     
     [Test]
@@ -189,15 +176,14 @@ public class GildedRoseTest
     {
         // Arrange
         var within5Days = 5;
-        IList<Item> items = GetSampleItem(name: "Backstage passes to a TAFKAL80ETC concert", sellIn: within5Days);
-        var expectedQuality = GetFirstItemQuality(items) + 3;
+        Item item = GetSampleItem(name: "Backstage passes to a TAFKAL80ETC concert", sellIn: within5Days);
+        var expectedQuality = item.Quality + 3;
     
         // Act
-        GildedRose app = new(items, ruleCreator.rules, ruleCreator.DefaultRule);
-        app.UpdateQuality();
+        m_app.UpdateQuality();
     
         // Assert
-        Assert.That(items[0].Quality, Is.EqualTo(expectedQuality));
+        Assert.That(item.Quality, Is.EqualTo(expectedQuality));
     }
     
     [Test, Description("Does it display on success")]
@@ -206,14 +192,13 @@ public class GildedRoseTest
         // Arrange
         var expectedQuality = 0;
         var sellInAfterConcert = 0;
-        IList<Item> items = GetSampleItem(name: "Backstage passes to a TAFKAL80ETC concert", sellIn: sellInAfterConcert);
+        Item item = GetSampleItem(name: "Backstage passes to a TAFKAL80ETC concert", sellIn: sellInAfterConcert);
     
         // Act
-        GildedRose app = new(items, ruleCreator.rules, ruleCreator.DefaultRule);
-        app.UpdateQuality();
+        m_app.UpdateQuality();
     
         // Assert
-        Assert.That(items[0].Quality, Is.EqualTo(expectedQuality));
+        Assert.That(item.Quality, Is.EqualTo(expectedQuality));
     }
     
     [Test, Description("Does it display on failure")]
@@ -221,14 +206,13 @@ public class GildedRoseTest
     public void ConjuredItemQualityDegradeTwiceAsFast()
     {
         // Arrange
-        IList<Item> items = GetSampleItem(name: "Conjured Mana Cake");
-        var expectedQuality = GetFirstItemQuality(items) - 2;
+        Item item = GetSampleItem(name: "Conjured Mana Cake");
+        var expectedQuality = item.Quality - 2;
     
         // Act
-        GildedRose app = new(items, ruleCreator.rules, ruleCreator.DefaultRule);
-        app.UpdateQuality();
+        m_app.UpdateQuality();
     
         // Assert
-        Assert.That(items[0].Quality, Is.EqualTo(expectedQuality));
+        Assert.That(item.Quality, Is.EqualTo(expectedQuality));
     }
 }
