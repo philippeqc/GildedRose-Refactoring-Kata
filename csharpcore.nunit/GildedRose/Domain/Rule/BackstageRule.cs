@@ -13,7 +13,7 @@ public class BackstagePassesRule
                 new QualityChangeRule(1),
                 new WhenSellInLowerOrEqualThanRule(new QualityChangeRule(1), sellInLowerOrEqual: 10),
                 new WhenSellInLowerOrEqualThanRule(new QualityChangeRule(1), sellInLowerOrEqual: 5),
-                new QualityConstantRule(0, fromSellIn: 0)
+                new WhenSellInLowerOrEqualThanRule(new QualityConstantRule(0), sellInLowerOrEqual: 0)
             ),
             new QualityValueRangeRule(0, 50)
         );
